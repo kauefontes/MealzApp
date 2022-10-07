@@ -1,13 +1,12 @@
 package dev.quewui.mealzapp.model.api
 
 import dev.quewui.mealzapp.model.response.MealsCategoriesResponse
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 class MealsWebService {
-    private var api: MealsApi
+    private var api: CategoriesApi
 
     init {
         val retrofit = Retrofit.Builder()
@@ -15,15 +14,15 @@ class MealsWebService {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        api = retrofit.create(MealsApi::class.java)
+        api = retrofit.create(CategoriesApi::class.java)
     }
 
-    fun getMeals(): Call<MealsCategoriesResponse> {
-        return api.getMeals()
+    suspend fun getCategories(): MealsCategoriesResponse {
+        return api.getCategories()
     }
 
-    interface MealsApi {
+    interface CategoriesApi {
         @GET("categories.php")
-        fun getMeals(): Call<MealsCategoriesResponse>
+        suspend fun getCategories(): MealsCategoriesResponse
     }
 }
