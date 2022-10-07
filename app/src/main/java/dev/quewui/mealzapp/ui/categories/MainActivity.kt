@@ -1,4 +1,4 @@
-package dev.quewui.mealzapp.ui.meals
+package dev.quewui.mealzapp.ui.categories
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,10 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.quewui.mealzapp.model.response.CategoryResponse
 import dev.quewui.mealzapp.ui.theme.MealzAppTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,19 +25,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CategoriesScreen() {
-    val viewModel: MealsCategoriesViewModel = viewModel()
-    val categoriesResponse: MutableState<List<CategoryResponse>> = remember {
-        mutableStateOf(emptyList())
-    }
-    val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(key1 = "GET_CATEGORIES") {
-        coroutineScope.launch(Dispatchers.IO) {
-            val categories = viewModel.getCategories()
-            categoriesResponse.value = categories
-        }
-    }
+    val viewModel: CategoriesViewModel = viewModel()
+    val categories = viewModel.categoriesState.value
     LazyColumn {
-        items(categoriesResponse.value) { category ->
+        items(categories) { category ->
             Text(text = category.name, style = MaterialTheme.typography.h2)
         }
     }
