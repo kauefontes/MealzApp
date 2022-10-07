@@ -1,16 +1,20 @@
 package dev.quewui.mealzapp.ui.categories
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -33,6 +37,7 @@ fun CategoriesList() {
 
 @Composable
 fun CategoryCard(category: CategoryResponse) {
+    var isExpanded by remember { mutableStateOf(false) }
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -41,13 +46,38 @@ fun CategoryCard(category: CategoryResponse) {
             .wrapContentHeight(align = Alignment.Top),
         elevation = 8.dp
     ) {
-        Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .padding(4.dp)
+                .animateContentSize()
         ) {
-            CategoryTitle(category.name)
-            CategoryPicture(category.thumbnailUrl, 200.dp)
-            CategorySumary(category.description)
+            CategoryPicture(category.thumbnailUrl, 88.dp)
+            Column(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(16.dp)
+                    .fillMaxWidth(0.8f)
+            ) {
+                CategoryTitle(category.name)
+                CategorySumary(category.description, isExpanded)
+            }
+            Icon(
+                if (isExpanded)
+                    Icons.Filled.KeyboardArrowUp
+                else
+                    Icons.Filled.KeyboardArrowDown,
+                "",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(
+                        if (isExpanded)
+                            Alignment.Bottom
+                        else
+                            Alignment.CenterVertically
+                    )
+                    .clickable { isExpanded = !isExpanded }
+            )
         }
     }
 }
@@ -58,19 +88,22 @@ fun CategoryPicture(pictureUrl: String, pictureSize: Dp) {
         model = (pictureUrl),
         contentDescription = "",
         modifier = Modifier
-            .fillMaxWidth()
-            .height(pictureSize)
-            .padding(16.dp)
+            .size(pictureSize),
+        alignment = Alignment.Center
     )
 }
 
 @Composable
-fun CategorySumary(description: String) {
+fun CategorySumary(description: String, isExpanded: Boolean) {
+    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+
+    }
     Text(
         text = description,
-        style = MaterialTheme.typography.body2,
-        modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 20.dp),
-        textAlign = TextAlign.Center
+        style = MaterialTheme.typography.subtitle2,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Start,
+        maxLines = if (isExpanded) 10 else 4
 
     )
 }
@@ -79,8 +112,7 @@ fun CategorySumary(description: String) {
 fun CategoryTitle(name: String) {
     Text(
         text = name,
-        style = MaterialTheme.typography.h5,
-        modifier = Modifier.padding(5.dp)
+        style = MaterialTheme.typography.h5
     )
 }
 
