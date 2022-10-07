@@ -6,7 +6,7 @@ import dev.quewui.mealzapp.model.response.CategoryResponse
 
 class MealsCategoriesViewModel(private val repository: MealsRepository = MealsRepository()) :
     ViewModel() {
-        fun getMeals(): List<CategoryResponse> {
-            return repository.getMeals().categories
+        fun getMeals(): List<CategoryResponse>? {
+            return repository.getMeals()?.categories
         }
     }

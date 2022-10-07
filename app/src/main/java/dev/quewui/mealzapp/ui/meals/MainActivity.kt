@@ -3,6 +3,7 @@ package dev.quewui.mealzapp.ui.meals
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +25,13 @@ class MainActivity : ComponentActivity() {
 fun CategoriesScreen() {
     val viewModel: MealsCategoriesViewModel = viewModel()
     val categories = viewModel.getMeals()
-    Text(text = "Hello Quewui!")
+    Row {
+        if (categories != null) {
+            for (category in categories) {
+                Text(text = category.name)
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
