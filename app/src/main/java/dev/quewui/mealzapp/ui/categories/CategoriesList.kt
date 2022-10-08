@@ -25,25 +25,25 @@ import dev.quewui.mealzapp.ui.theme.MealzAppTheme
 
 
 @Composable
-fun CategoriesList() {
+fun CategoriesList(navigationCallback: (String) -> Unit) {
     val viewModel: CategoriesViewModel = viewModel()
     val categories = viewModel.categoriesState.value
     LazyColumn {
         items(categories) { category ->
-            CategoryCard(category = category)
+            CategoryCard(category, navigationCallback)
         }
     }
 }
 
 @Composable
-fun CategoryCard(category: CategoryResponse) {
+fun CategoryCard(category: CategoryResponse, navigationCallback: (String) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .wrapContentHeight(align = Alignment.Top),
+            .clickable { navigationCallback(category.id) },
         elevation = 8.dp
     ) {
         Row(
@@ -69,14 +69,10 @@ fun CategoryCard(category: CategoryResponse) {
                     Icons.Filled.KeyboardArrowDown,
                 "",
                 modifier = Modifier
-                    .padding(16.dp)
-                    .align(
-                        if (isExpanded)
-                            Alignment.Bottom
-                        else
-                            Alignment.CenterVertically
-                    )
+                    .padding(start = 15.dp)
+                    .align(Alignment.CenterVertically)
                     .clickable { isExpanded = !isExpanded }
+                    .height(24.dp)
             )
         }
     }
@@ -120,6 +116,6 @@ fun CategoryTitle(name: String) {
 @Composable
 fun DefaultPreview() {
     MealzAppTheme {
-        CategoriesList()
+        CategoriesList({})
     }
 }

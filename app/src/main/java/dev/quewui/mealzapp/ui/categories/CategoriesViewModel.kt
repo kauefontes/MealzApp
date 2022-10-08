@@ -10,7 +10,7 @@ import dev.quewui.mealzapp.model.response.CategoryResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoriesViewModel(private val repository: CategoriesRepository = CategoriesRepository()) :
+class CategoriesViewModel(private val repository: CategoriesRepository = CategoriesRepository.getInstance()) :
     ViewModel() {
 
     init {

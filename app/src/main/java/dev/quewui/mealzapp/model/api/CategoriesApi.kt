@@ -1,6 +1,6 @@
 package dev.quewui.mealzapp.model.api
 
-import dev.quewui.mealzapp.model.response.CategoriesCategoriesResponse
+import dev.quewui.mealzapp.model.response.CategoriesResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -17,12 +17,12 @@ class CategoriesWebService {
         api = retrofit.create(CategoriesApi::class.java)
     }
 
-    suspend fun getCategories(): CategoriesCategoriesResponse {
+    suspend fun getCategories(): CategoriesResponse {
         return api.getCategories()
     }
 
     interface CategoriesApi {
         @GET("categories.php")
-        suspend fun getCategories(): CategoriesCategoriesResponse
+        suspend fun getCategories(): CategoriesResponse
     }
 }
