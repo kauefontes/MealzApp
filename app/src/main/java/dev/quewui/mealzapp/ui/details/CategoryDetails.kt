@@ -4,6 +4,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -25,9 +28,12 @@ import kotlin.math.min
 
 @Composable
 fun CategoryDetails(category: CategoryResponse?) {
-    val scrollState = rememberScrollState()
-    val offset = min(1f, 1 - (scrollState.value / 1200f))
-    val size by animateDpAsState(targetValue = max(100.dp, 200.dp * offset))
+    val scrollState = rememberLazyListState()
+    val offset = min(
+        1f,
+        1 - (scrollState.firstVisibleItemScrollOffset / 600f + scrollState.firstVisibleItemIndex)
+    )
+    val size by animateDpAsState(targetValue = max(50.dp, 140.dp * offset))
     Surface(color = MaterialTheme.colors.background) {
         Column {
             Surface(elevation = 4.dp) {
@@ -54,7 +60,6 @@ fun CategoryDetails(category: CategoryResponse?) {
                             modifier = Modifier
                                 .size(size)
                         )
-
                     }
                     Text(
                         category?.name ?: "No name",
@@ -64,29 +69,13 @@ fun CategoryDetails(category: CategoryResponse?) {
                     )
                 }
             }
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
-                Text("This is a text!", modifier = Modifier.padding(32.dp))
-                Text("This is another text!", modifier = Modifier.padding(32.dp))
+            val dummyList = (0..100).map { it.toString() }
+            LazyColumn(state = scrollState) {
+                items(dummyList) { dummyItem ->
+                    Text(text = dummyItem, modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth())
+                }
             }
         }
     }
