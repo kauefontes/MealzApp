@@ -1,18 +1,13 @@
 package dev.quewui.mealzapp.ui.details
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,61 +16,77 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import dev.quewui.mealzapp.model.response.CategoryResponse
+import kotlin.math.min
 
 @Composable
 fun CategoryDetails(category: CategoryResponse?) {
-    var categoryPictureState by remember {
-        mutableStateOf(CategoryPictureState.Normal)
-    }
-    val transition = updateTransition(categoryPictureState, label = "")
-    val pictureSizeDp: Dp by transition.animateDp(targetValueByState = { it.size }, label = "")
-    val color by transition.animateColor(targetValueByState = { it.color }, label = "")
-    val borderWidth by transition.animateDp(targetValueByState = { it.borderWidth }, label = "")
-    Card {
+    val scrollState = rememberScrollState()
+    val offset = min(1f, 1 - (scrollState.value / 1200f))
+    val size by animateDpAsState(targetValue = max(100.dp, 200.dp * offset))
+    Surface(color = MaterialTheme.colors.background) {
         Column {
-            Row {
-                Card(
-                    modifier = Modifier.padding(16.dp),
-                    shape = CircleShape,
-                    border = BorderStroke(
-                        width = borderWidth,
-                        color = color
-                    )
+            Surface(elevation = 4.dp) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Image(
-                        rememberAsyncImagePainter(
-                            ImageRequest.Builder(LocalContext.current)
-                                .data(data = category?.thumbnailUrl)
-                                .apply(block = fun ImageRequest.Builder.() {
-                                    transformations(CircleCropTransformation())
-                                }).build()
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(pictureSizeDp)
-                            .padding(8.dp)
-                    )
+                    Card(
+                        modifier = Modifier.padding(16.dp),
+                        shape = CircleShape,
+                        border = BorderStroke(
+                            width = 4.dp,
+                            color = Color.Blue
+                        )
+                    ) {
+                        Image(
+                            rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(data = category?.thumbnailUrl)
+                                    .apply(block = fun ImageRequest.Builder.() {
+                                        transformations(CircleCropTransformation())
+                                    }).build()
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(size)
+                        )
 
+                    }
+                    Text(
+                        category?.name ?: "No name",
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterVertically)
+                    )
                 }
-                Text(
-                    category?.name ?: "No name",
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.CenterVertically)
-                )
             }
-            Button(onClick = {
-                categoryPictureState =
-                    if (categoryPictureState == CategoryPictureState.Normal)
-                        CategoryPictureState.Expanded
-                    else
-                        CategoryPictureState.Normal
-            }) {
-                Text("Change state of the current category picture")
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
+                Text("This is a text!", modifier = Modifier.padding(32.dp))
+                Text("This is another text!", modifier = Modifier.padding(32.dp))
             }
         }
     }
@@ -83,7 +94,7 @@ fun CategoryDetails(category: CategoryResponse?) {
 
 @Preview
 @Composable
-fun Preview() {
+fun CategoryCardPreview() {
     CategoryDetails(
         CategoryResponse(
             "4",
